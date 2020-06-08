@@ -1,0 +1,48 @@
+﻿<div class="col-3 teampick" aria-dropeffect="">
+    <input type="radio" id="@ID" location="@location" name=@game class="position-absolute" />
+    <label for="@ID" class="btn">
+        <img src="@teamNameImgSrc" class="teamnameimg" alt="@ID" />
+        <img src=@logoImgSrc class="teamlogo" alt="@ID"/>
+        <div class="record"><strong>(@wins-@losses)</strong></div>
+    </label>
+    <div class="teampickbox col-12"></div>
+</div>
+
+@code {
+    [Parameter] public int game { get; set; }
+    [Parameter] public string logoImgSrc { get; set; }
+    [Parameter] public int wins { get; set; }
+    [Parameter] public int losses { get; set; }
+    [Parameter] public string ID { get; set; }
+    [Parameter] public string teamNameImgSrc { get; set; }
+    [Parameter] public string location { get; set; }
+
+    /*Store a default boolean state for radio buttons being selected or not*/
+    //private bool selected = false;
+
+    //private string SelectedCssClass => selected ? "teamSelectedTrue" : null;
+
+    //private string SelectedCssClass => selected ? "teamSelectedTrue" : null;
+
+    //selected = !selected
+
+    //public string radioStyle = null;
+
+    //private void radioSelected()
+    //{
+    //    Console.WriteLine("You clicked me!");
+    //    selected = !selected;
+    //}
+
+    //    if(radioStyle != "teamSelectedTrue")
+    //    {
+    //        radioStyle = "teamSelectedTrue";
+    //    }
+    //    else
+    //    {
+    //        radioStyle = null;
+    //    }
+
+    //}
+
+}
