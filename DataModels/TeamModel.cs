@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace ComponentTesting
     public class Team
     {
         //Set the paths to find where the image resources are located; they need to use consistent naming
-        private readonly string imgpathroot = "/Images/NFL_Logos/";
+        private readonly string imgpathroot = "/Images/Resized/";
         private readonly string iconpath = "-logo-transparent.png";
         private readonly string fontpath = "-logo-font.png";
 
@@ -102,16 +103,19 @@ namespace ComponentTesting
         {
             get 
             {
-                return string.Format(imgpathroot + teamname + "/" + teamname + iconpath);
+                return string.Format(imgpathroot + /*teamname + "/" +*/ teamname + iconpath);
             } 
         }
         public string teamNameImgSrc
         {
             get
             {
-                return string.Format(imgpathroot + teamname + "/" + teamname + fontpath);
+                return string.Format(imgpathroot  + /*teamname + "/" +*/ teamname + fontpath);
             }
 
         }
+        //public double aspectRatio;
+
+        //public static Bitmap LoadOriginalImage (string logoImgSrc)
     }
 }

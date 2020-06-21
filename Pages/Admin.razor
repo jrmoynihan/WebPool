@@ -1,0 +1,14 @@
+﻿@page "/Admin"
+
+<h3>Admin</h3>
+
+<EditForm Model="@newGame" OnValidSubmit="@InsertGame"></EditForm>
+
+@code {
+    private Game newGame = new Game();
+
+    private void InsertGame()
+    {
+
+    }
+}

@@ -1,0 +1,20 @@
+﻿<div class="teampick">
+    <input type="radio" id="@ID" location="@location" name=@game />
+    <label for="@ID">
+        <img src="@teamNameImgSrc" class="teamnameimg" alt="@ID" />
+        <img src=@logoImgSrc class="teamlogo" alt="@ID" />
+        <div class="record"><strong>(@wins-@losses)</strong></div>
+    </label>
+    <div class="teampickbox"></div>
+</div>
+
+@code {
+    [Parameter] public int game { get; set; }
+    [Parameter] public string logoImgSrc { get; set; }
+    [Parameter] public int wins { get; set; }
+    [Parameter] public int losses { get; set; }
+    [Parameter] public string ID { get; set; }
+    [Parameter] public string teamNameImgSrc { get; set; }
+    [Parameter] public string location { get; set; }
+
+}

@@ -1,36 +1,39 @@
 ﻿@page "/Schedule"
 
-<div class="col-12 scheduleTitle row m-2">
-    <span class="oi oi-caret-left col-2 weekNavigator" @onclick="@previousWeek"></span>
-    <h1 class="col-8 weekTitle"><strong>Week @weekDisplay Schedule</strong></h1>
-    <span class="oi oi-caret-right col-2 weekNavigator" @onclick="@nextWeek"></span>
-    @*</div>*@
+    <div class="col-12 scheduleTitle row m-1">
+        <span class="oi oi-caret-left col-2 weekNavigator" @onclick="@previousWeekArrowClicked"></span>
+        <h1 class="col-8 weekTitle"><strong>Week @weekDisplay </strong></h1>
+        <span class="oi oi-caret-right col-2 weekNavigator" @onclick="@nextWeekArrowClicked"></span>
 
-    @*<div class="row col-12">*@
-    <div class="col-3 btn text-center font-weight-bolder scheduleHeaders" @onclick="allHome">Home</div>
-    <div class="col-3 btn text-center font-weight-bolder scheduleHeaders" @onclick="allAway">Away</div>
-    <div class="col-2 text-center font-weight-bolder scheduleHeaders">Spread</div>
-    <div class="col-2 text-center font-weight-bolder scheduleHeaders">Time</div>
-    @if (@weekSelection < @weeks.Count)
-    {
-        @foreach (var item in @weeks[@weekSelection].weekGames)
+        <div class="col-5 text-center font-weight-bolder scheduleHeaders">Home</div>
+        <div class="col-2 text-center font-weight-bolder scheduleHeaders">Game Info</div>
+        <div class="col-5 text-center font-weight-bolder scheduleHeaders">Away</div>
+        
+        @if (@weekSelection < @weeks.Count)
         {
-            //Make a div for the home team
-            <ScheduleGame logoImgSrc="@item.homeTeam.logoImgSrc" location="home" game=@item.gameNum wins="@item.homeTeam.wins" losses="@item.homeTeam.losses" ID="@item.homeTeam.ID" teamNameImgSrc="@item.homeTeam.teamNameImgSrc" />
+            @foreach (var item in @weeks[@weekSelection].weekGames)
+            {
+                //Make a div for the home team
+                <ScheduleGame logoImgSrc="@item.homeTeam.logoImgSrc" location="home" game=@item.gameNum wins="@item.homeTeam.wins" losses="@item.homeTeam.losses" ID="@item.homeTeam.ID" teamNameImgSrc="@item.homeTeam.teamNameImgSrc" />
 
-            //Make a div for the away team
-            <ScheduleGame logoImgSrc="@item.awayTeam.logoImgSrc" location="away" game=@item.gameNum wins="@item.awayTeam.wins" losses="@item.awayTeam.losses" ID="@item.awayTeam.ID" teamNameImgSrc="@item.awayTeam.teamNameImgSrc" />
+                //Make a div for the spread and DateTime
+                <div class="col-2 align-self-center font-weight-bolder teampick">
+                    <div class="spread">@item.spread</div>
+                    <div class="datetime"> @DateTime.Today.ToString("dddd, MMMM dd") <br /> @@ @DateTime.Now.ToString("h:mm tt")</div>
+                </div>                
 
-            //Make a div for the spread and DateTime
-            <div class="col-2 align-self-center font-weight-bolder teampick spread">@item.spread</div>
-            <div class="col-2 align-self-center font-weight-bolder teampick datetime">Monday, September 6th @@ 8pm</div>
+                //Make a div for the away team
+                <ScheduleGame logoImgSrc="@item.awayTeam.logoImgSrc" location="away" game=@item.gameNum wins="@item.awayTeam.wins" losses="@item.awayTeam.losses" ID="@item.awayTeam.ID" teamNameImgSrc="@item.awayTeam.teamNameImgSrc" />
 
+            }
         }
-    }
-</div>
+    </div>
+    
 
 @*ADD IN A POST FORM STICKY BAR COMPONENT!*@
 
+@*Build a dynamic grid style based on the number of games*@
+<ScheduleStyle/>
 
 @code
 {
@@ -41,7 +44,7 @@
     private int weekDisplay = 1;
 
     //Increment the weekSelection and weekDisplay variables if it's less than Week 17 (base zero)
-    private void nextWeek()
+    private void nextWeekArrowClicked()
     {
         if (weekSelection < weeks.Count)
         {
@@ -53,7 +56,7 @@
     }
 
     //Decrement the weekSelection variable if it's greater than Week 1 (base zero)
-    private void previousWeek()
+    private void previousWeekArrowClicked()
     {
         if (weekSelection > 0)
         {
@@ -64,48 +67,24 @@
         }
     }
 
-    //Instantiate a new List object to store the different weeks of game data
-    private List<Week> weeks = new List<Week>();
+    //*** Select all home or away games ***  NEEDS REVISION ***
+    //private bool homeCheck;
+    //private bool awayCheck;
 
-    //Load the week data when the page [component] is initialized
-    protected override void OnInitialized()
-    {
-        weekDisplay = weekSelection + 1;
+    //private void allHome()
+    //{
+    //    homeCheck = !homeCheck;
+    //}
 
-        //Instantiate a new week
-        Week week1 = new Week()
-        {
-            weekNumber = 1,
-            weekGames = week1Games
-        };
-
-        Week week2 = new Week()
-        {
-            weekNumber = 2,
-            weekGames = week2Games
-        };
-
-        //Add the week to the list of weeks
-        weeks.Add(week1);
-        weeks.Add(week2);
-    }
+    //private void allAway()
+    //{
+    //    awayCheck = !awayCheck;
+    //}
 
 
-    //Select all home or away games  **NEEDS REVISION**
-    public bool homeCheck;
-    public bool awayCheck;
-
-    private void allHome()
-    {
-        homeCheck = !homeCheck;
-    }
-
-    private void allAway()
-    {
-        awayCheck = !awayCheck;
-    }
 
     //Locally bind the data for Week 1 games
+
     public List<Game> week1Games = new List<Game>()
 {
                 new Game
@@ -171,136 +150,33 @@
                 }
     };
 
+    //Instantiate a new List object to store the different weeks of game data
+    private List<Week> weeks = new List<Week>();
+
+    //Load the week data when the page [component] is initialized
+    protected override void OnInitialized()
+    {
+        //weekSelection is a zero-based List; need to +1 to display 'Week 1' instead of 'Week 0'
+        weekDisplay = weekSelection + 1;
+
+        //Instantiate a new week, setting its week number and the List<Games> instance associated with it
+        //This will be turned into a class method
+        Week week1 = new Week()
+        {
+            weekNumber = 1,
+            weekGames = week1Games
+        };
+
+        Week week2 = new Week()
+        {
+            weekNumber = 2,
+            weekGames = week2Games
+        };
+
+        //Add the week to the list of weeks
+        //This will be turned into a class method
+        weeks.Add(week1);
+        weeks.Add(week2);
+    }
+
 }
-
-<style>
-    /*The 'Week [X] Schedule' title at the top of the screen*/
-    .scheduleTitle {
-        position: sticky;
-        text-align: center;
-        margin-bottom: 2%;
-        display: flex;
-    }
-
-    /*Arrow icons to move to another week*/
-    .weekNavigator {
-        cursor: pointer;
-        font-size: 3em;
-    }
-
-    .weekTitle {
-        padding: 0;
-        vertical-align: middle;
-    }
-
-    /*Home, Away, Spread headers*/
-    .scheduleHeaders {
-        background: radial-gradient(#5B7B5C, black);
-        color: white;
-        padding: 10px;
-        padding: 1%;
-        border: 1px solid white;
-        border-radius: 50px;
-        margin: 1%;
-        text-align: center;
-    }
-
-    .spread, .datetime { 
-        
-    }
-
-    .spread {
-        font-size: 3vw;
-    }
-
-    .datetime {
-        font-size: 1vw;
-        overflow-wrap: break-word;
-    }
-
-    /*Hide the radio buttons*/
-    [type=radio] {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    /*Set the team name to the top left corner of its container div, place it above the other elements*/
-    .teamnameimg {
-        position: absolute;
-        z-index: 1;
-        /*background-color: #ffffff70;*/
-        border-radius: 25%;
-        padding: 1%;
-        bottom: -7%;
-        left: 3%;
-        height:30%;
-        width: 30%;
-    }
-
-  /*Win-loss labels*/
-    .record {
-        position: absolute;
-        z-index: 1;
-        right: 5%;
-        bottom: 5%;
-        display: table-cell;
-    }
-
-    /*Style default appearance of images*/
-    [type=radio] + label img {
-        /*cursor: pointer; /*Add a pointer cursor when on the images that come immediately after (adjacent) to radio buttons*/
-        -webkit-filter: grayscale(100%);
-        filter: grayscale(100%);
-        vertical-align: super;
-        max-width: 100%;
-    }
-
-    /*Style what the imglooks like when the radio button is checked*/
-    [type=radio]:checked + label img {
-        -webkit-filter: grayscale(0%);
-        filter: grayscale(0%);
-    }
-
-    .teampick {
-        /*background-color: rgba(0, 0, 0, 0.10);*/
-        margin: 1%
-    }
-
-        .teampick label {
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-        }
-
-        .teampick input[type="radio"] ~ div {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            display:initial;
-            z-index: -1;
-        }
-
-        .teampick input[type="radio"]:checked ~ div {
-            transform: scale(.95);
-            transition: ease-in-out 0.3s;
-            box-shadow: 2px 2px 20px rgba(0,0,0,0.4);
-        }
-
-    /*In case you need to modify the logo*/
-    .teamlogo {
-        padding: 2%;
-        /*vertical-align: super;*/
-        max-height: 200px;
-        max-width: 300px;
-    }
-
-    /*Style the divs holding the pick buttons*/
-    :checked {
-        padding: 10%;
-        text-align: center;
-        border: 5px inset;
-        border-radius: 75px;
-    }
-</style>
